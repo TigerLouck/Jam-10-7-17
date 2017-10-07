@@ -21,7 +21,7 @@ public class BreakTrap : MonoBehaviour {
 	}
 
     // Method for detecting collision
-    void OnCollisionEnter(Collision col)
+    void OnCollisionEnter2D(Collision2D col)
     {
         if(col.gameObject.name == "Player")
         {
