@@ -21,7 +21,8 @@ GameObject:
   - component: {fileID: 4308161671141712}
   - component: {fileID: 212909571454557894}
   - component: {fileID: 61269817085163882}
-  m_Layer: 0
+  - component: {fileID: 50729034568080626}
+  m_Layer: 8
   m_Name: TestPlat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35,12 +36,32 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1581175974523848}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.73, z: 0}
+  m_LocalPosition: {x: 0, y: -2.88, z: 0}
   m_LocalScale: {x: 4.6367846, y: 0.6524305, z: 4.280543}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &50729034568080626
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1581175974523848}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 1
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!61 &61269817085163882
 BoxCollider2D:
   m_ObjectHideFlags: 1
