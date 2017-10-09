@@ -88,9 +88,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\BreakTrap.cs" />
+    <Compile Include="Assets\Scripts\DestroySelf.cs" />
+    <Compile Include="Assets\Scripts\Platform.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\SnapTiles.cs" />
+    <Compile Include="Assets\Scripts\Spikes.cs" />
     <Compile Include="Assets\Scripts\SpikeTrap.cs" />
+    <Compile Include="Assets\Scripts\Stats.cs" />
     <Compile Include="Assets\Scripts\TrackCharacter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />

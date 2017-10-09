@@ -8,12 +8,16 @@ using UnityEngine;
  * 
  * Notes:
  *  - The player object must be named "Player" for this script to work.
+ *  - The player object must have a Collider2D and Rigidbody2D.
  */
 public class BreakTrap : MonoBehaviour {
 
-    public float breakDelay;
+    public float fallDistancePerTick;
+    public int breakAnimationTicks;
 
     private GameObject player;
+    private bool triggered = false;
+    private int counter = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -25,20 +29,23 @@ public class BreakTrap : MonoBehaviour {
     {
         if(col.gameObject.name == "Player")
         {
-            StartCoroutine(BreakDelay());
+            triggered = true;
         }
     }
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+		if(triggered)
+        {
+            Destroy(gameObject.GetComponent<Collider2D>());
+            gameObject.transform.position += new Vector3(0, -fallDistancePerTick, 0);
 
-    // Delayed method for when the block breaks
-    IEnumerator BreakDelay()
-    {
-        // Destroys the collision object so that the player will fall through
-        yield return new WaitForSeconds(breakDelay);
-        Destroy(gameObject.GetComponent<Collider2D>());
-    }
+            if(counter > breakAnimationTicks)
+            {
+                Destroy(gameObject);
+            }
+
+            counter++;
+        }
+	}
 }
