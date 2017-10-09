@@ -8,18 +8,22 @@ using UnityEngine;
  * The OnTrigger boolean can be set to true if the trigger should only register once the player collides with the block.
  * 
  * Notes:
- *  - Starting Delay is advised to be set above 0.5 seconds. The Start method occurs during level loading but Update does not, which can cause time delay issues.
+ *  - All time variables are measured in game ticks
  *  - The player object must be named "Player" for this script to work.
+ *  - The player object must have a Collider2D and Rigidbody2D.
  */
 public class SpikeTrap : MonoBehaviour {
 
     public GameObject spikeObject;
     public bool onTrigger;
-    public float startDelay;
-    public float timeDelay;
-    public float spikeDuration;
+    public float startDelayTicks;
+    public float timeDelayTicks;
+    public float warnDurationTicks;
+    public float spikeDurationTicks;
 
-    private bool isActive = true;
+    private int counter = 0;
+    private bool startDelayDone = false;
+    private string spikeState = "Down";
     private bool triggered = false;
     private GameObject player;
     private GameObject spikeObjectSpawn;
@@ -27,7 +31,6 @@ public class SpikeTrap : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         player = GameObject.Find("Player");
-        StartCoroutine(StartDelay());
 	}
 
     // Method for collision
@@ -41,44 +44,53 @@ public class SpikeTrap : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        // Triggers spikes on player touch
-        if(!isActive && triggered && onTrigger)
+        // Start delay
+        if(!startDelayDone && counter > startDelayTicks)
         {
-            isActive = true;
-            StartCoroutine(SpawnSpikes());
+            startDelayDone = true;
+            counter = 0;
         }
-        // Triggers spikes over time
-		else if(!isActive)
+
+        // Starts running after start delay
+        if(startDelayDone)
         {
-            isActive = true;
-            StartCoroutine(SpawnSpikes());
+            // Enabled for players stepping on the tile
+            if(triggered && onTrigger)
+            {
+                spikeState = "Triggered";
+                counter = 0;
+                Vector3 spikePosition = transform.position;
+                spikePosition += new Vector3(0, 0.5f, 0);
+                spikeObjectSpawn = Instantiate(spikeObject, spikePosition, Quaternion.identity);
+                spikeObjectSpawn.GetComponent<Spikes>().enabled = false;
+            }
+            else if(spikeState == "Down" && counter >= timeDelayTicks && !onTrigger)
+            {
+                
+                spikeState = "Triggered";
+                counter = 0;
+                Vector3 spikePosition = transform.position;
+                spikePosition += new Vector3(0, 0.5f, 0);
+                spikeObjectSpawn = Instantiate(spikeObject, spikePosition, Quaternion.identity);
+                spikeObjectSpawn.GetComponent<Spikes>().enabled = false;
+            }
+            else if(spikeState == "Triggered" && counter >= warnDurationTicks)
+            {
+                spikeState = "Up";
+                counter = 0;
+                Vector3 spikePosition = transform.position;
+                spikePosition += new Vector3(0, 1, 0);
+                spikeObjectSpawn.transform.position = spikePosition;
+                spikeObjectSpawn.GetComponent<Spikes>().enabled = true;
+            }
+            else if(spikeState == "Up" && counter >= spikeDurationTicks)
+            {
+                spikeState = "Down";
+                counter = 0;
+                Destroy(spikeObjectSpawn);
+            }
         }
+
+        counter++;
 	}
-
-    // Delayed method for when the spikes first spawn
-    IEnumerator StartDelay()
-    {
-        yield return new WaitForSeconds(startDelay);
-        isActive = false;
-    }
-
-    // Delayed method for spawning spikes
-    IEnumerator SpawnSpikes()
-    {
-        // Spawns spikes once the time is up and starts the delay to destroy them
-        yield return new WaitForSeconds(timeDelay);
-        Vector3 spikePosition = transform.position;
-        spikePosition += new Vector3(0, 1, 0);
-        spikeObjectSpawn = Instantiate(spikeObject, spikePosition, Quaternion.identity);
-        StartCoroutine(RemoveSpikes());
-    }
-
-    // Delayed method for removing spikes
-    IEnumerator RemoveSpikes()
-    {
-        // Destroys the spawned spikes once the time is up
-        yield return new WaitForSeconds(spikeDuration);
-        Destroy(spikeObjectSpawn);
-        isActive = false;
-    }
 }
